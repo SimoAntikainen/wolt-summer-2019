@@ -1,0 +1,68 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>The HTML5 Herald</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+
+</head>
+
+<body>
+
+  <div id="tester" style="width:600px;height:250px;"></div>
+
+  <button type="button" onclick="updateVisualization()">Try it</button>
+
+  <script>
+
+    var initial_data = {}
+    function initializeVisualization() {
+      fetch('http://localhost:5000/defaultdata')
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(myJson) {
+          print( JSON.stringify(myJson))
+          print("adsds")
+          
+          TESTER = document.getElementById('tester');
+          Plotly.plot( TESTER, [{
+          x: [1, 2, 3, 4, 5],
+          y: [1, 2, 4, 8, 16] }], {
+          margin: { t: 0 } } );  
+        })
+    }
+
+    initializeVisualization()
+    
+  </script>
+
+
+  <script>
+      var a = {}
+      function updateVisualization() {
+        fetch('http://localhost:5000/defaultdata')
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(myJson) {
+          a = JSON.stringify(myJson)
+          printvals()
+        });
+      }
+
+      function printvals() {
+        console.log(a)
+      }
+    </script>
+
+</body>
+
+
+
+</html>
