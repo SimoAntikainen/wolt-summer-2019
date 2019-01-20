@@ -13,7 +13,10 @@ def all_locations_median():
     locations = pd.read_csv("locations.csv")
     pickup_times =pd.read_csv("pickup_times.csv")
 
-    pickup_times_by_location = pickup_times.groupby('location_id')
+    pickup_times_slice = pickup_times[(pickup_times['iso_8601_timestamp'] > '2019-01-13T19:00:00Z') 
+    & (pickup_times['iso_8601_timestamp'] <= '2019-01-13T20:00:00Z')]
+
+    pickup_times_by_location = pickup_times_slice.groupby('location_id')
     location_medians = pickup_times_by_location['pickup_time'].median()
 
     location_indexes = location_medians.index.values

@@ -14,27 +14,38 @@
 
 <body>
 
-  <div id="tester" style="width:1000px;height:500px;"></div>
+  <div id="restaurant-map" style="width:1000px;height:500px;"></div>
 
   <button type="button" onclick="updateVisualization()">Try it</button>
 
   <form action="/my-handling-form-page" method="post">
     <div>
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="user_name">
+      <label for="Date">Date:</label>
+      <input type="date" id="start" name="trip-start"
+        value="2019-01-07"
+        min="2019-01-07" max="2019-01-13">
     </div>
     <div>
       <label for="mail">E-mail:</label>
       <input type="email" id="mail" name="user_mail">
     </div>
-    <div>
-      <label for="msg">Message:</label>
-      <textarea id="msg" name="user_message"></textarea>
-    </div>
   </form>
 
 
   <script>
+
+    function formatLocationText(plotJson) {
+      var formattedLocation = []
+      locations = Object.values(plotJson.location_id)
+      medians = Object.values(plotJson.median)
+
+      for (var i = 0; i < locations.length; i++) {
+        var markerText = "id: " + locations[i] + " Md: " + medians[i] + ""
+        formattedLocation.push(markerText)
+      }
+
+      return formattedLocation
+    }
 
     var initial_data = {}
     function initializeVisualization() {
@@ -46,13 +57,15 @@
           //print( JSON.stringify(myJson))
           //print("adsds")
           
-          TESTER = document.getElementById('tester');
+          TESTER = document.getElementById('restaurant-map');
 
           var trace1 = {
             x: Object.values(plotJson.longitude),
             y: Object.values(plotJson.latitude),
             mode: 'markers',
             type: 'scatter',
+            text: formatLocationText(plotJson),
+            textposition: 'top center',
             marker: {
               size: 10,
               color: Object.values(plotJson.median),
@@ -66,16 +79,30 @@
           var data = [trace1];
 
           var layout = {
-            title: 'Helsinki restaurant median pickup times'
+            title: 'Helsinki restaurant median pickup times',
+            xaxis: {
+            title: {
+              text: 'Longitude',
+              font: {
+              family: 'Courier New, monospace',
+              size: 18,
+              color: '#7f7f7f'
+              }
+            },
+            },
+            yaxis: {
+              title: {
+                text: 'Latitude',
+              font: {
+              family: 'Courier New, monospace',
+              size: 18,
+              color: '#7f7f7f'
+                }
+              }
+            }
           };
 
-          Plotly.newPlot('tester', data, layout);
-
-
-          //Plotly.plot( TESTER, [{
-          //x: [1, 2, 3, 4, 5],
-          //y: [1, 2, 4, 8, 16] }], {
-          //margin: { t: 0 } } );  
+          Plotly.newPlot('restaurant-map', data, layout);
         })
     }
 
