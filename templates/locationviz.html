@@ -14,9 +14,25 @@
 
 <body>
 
-  <div id="tester" style="width:600px;height:250px;"></div>
+  <div id="tester" style="width:1000px;height:500px;"></div>
 
   <button type="button" onclick="updateVisualization()">Try it</button>
+
+  <form action="/my-handling-form-page" method="post">
+    <div>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="user_name">
+    </div>
+    <div>
+      <label for="mail">E-mail:</label>
+      <input type="email" id="mail" name="user_mail">
+    </div>
+    <div>
+      <label for="msg">Message:</label>
+      <textarea id="msg" name="user_message"></textarea>
+    </div>
+  </form>
+
 
   <script>
 
@@ -26,15 +42,40 @@
         .then(function(response) {
           return response.json();
         })
-        .then(function(myJson) {
-          print( JSON.stringify(myJson))
-          print("adsds")
+        .then(function(plotJson) {
+          //print( JSON.stringify(myJson))
+          //print("adsds")
           
           TESTER = document.getElementById('tester');
-          Plotly.plot( TESTER, [{
-          x: [1, 2, 3, 4, 5],
-          y: [1, 2, 4, 8, 16] }], {
-          margin: { t: 0 } } );  
+
+          var trace1 = {
+            x: Object.values(plotJson.longitude),
+            y: Object.values(plotJson.latitude),
+            mode: 'markers',
+            type: 'scatter',
+            marker: {
+              size: 10,
+              color: Object.values(plotJson.median),
+              colorbar: {
+                title: "Median",
+                dtick: 2
+              }
+            }
+          };
+
+          var data = [trace1];
+
+          var layout = {
+            title: 'Helsinki restaurant median pickup times'
+          };
+
+          Plotly.newPlot('tester', data, layout);
+
+
+          //Plotly.plot( TESTER, [{
+          //x: [1, 2, 3, 4, 5],
+          //y: [1, 2, 4, 8, 16] }], {
+          //margin: { t: 0 } } );  
         })
     }
 
@@ -51,7 +92,8 @@
           return response.json();
         })
         .then(function(myJson) {
-          a = JSON.stringify(myJson)
+          a = JSON.stringify(Object.values(myJson.location_id))
+          
           printvals()
         });
       }

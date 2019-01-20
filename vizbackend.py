@@ -17,13 +17,13 @@ def all_locations_median():
     location_medians = pickup_times_by_location['pickup_time'].median()
 
     location_indexes = location_medians.index.values
-    location_medians = location_medians #.values.reshape(1,location_medians.shape[0])
+    location_medians = location_medians
 
     location_medians_with_index = pd.DataFrame(data={'location_id': location_indexes, 'median': location_medians}, columns=['location_id', 'median'])
     
     joined = location_medians_with_index.merge(locations, left_on='location_id', right_on='location_id', how='outer')
 
-    return joined.to_json(orient='split')
+    return joined.to_json(orient='columns')
 
 @app.route('/')
 def hello_world():
