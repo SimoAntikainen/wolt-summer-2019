@@ -2,14 +2,10 @@
 <head>
   <meta charset="utf-8">
 
-  <title>The HTML5 Herald</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
+  <title>Helsinki restaurant median pickup times</title>
+  <meta name="author" content="Simo Antikainen">
 
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-
-
 
 </head>
 
@@ -17,9 +13,7 @@
 
   <div id="restaurant-map" style="width:1000px;height:500px;"></div>
 
-  <button type="button" onclick="updateVisualization()">Try it</button>
-
-  <form action="/visualizationdata" id="data-update-form" method="get">
+  <form action="/visualizationdata" id="data-update-form" method="get" onsubmit="return updateVisualization(event)">
     <div>
       <label for="Date">Date:</label>
       <input type="date" id="day-selected" name="day-selected"
@@ -112,54 +106,33 @@
         })
         .then(function(plotJson) {
           drawVisualization(plotJson)
-          console.log( JSON.stringify(plotJson))
-          //print("adsds")
         })
     }
 
-    initializeVisualization()
+    function updateVisualization(event) {
+      event.preventDefault()
+      //https://stackoverflow.com/questions/35038857/setting-query-string-using-fetch-get-request
+      //https://stackoverflow.com/questions/46640024/how-do-i-post-form-data-with-fetch-api
 
-    $("#data-update-form").submit(function(e) {
-      e.preventDefault()
+      var url = new URL('http://localhost:5000/visualizationdata')
+      const params = new URLSearchParams(new FormData(document.getElementById("data-update-form")));
 
-      var form = $(this);  
-      $.ajax({
-           type: "GET",
-           url: form.attr('action'),
-           data: form.serialize(), // serializes the form's elements.
-           success: function(data)
-           {
-             //drawVisualization(data.json())
-               console.log(JSON.stringify(data)); // show response from the php script.
-           }
-         });
-
-  });
-    
-  </script>
-
-
-  <script>
-      var a = {}
-      function updateVisualization() {
-        fetch('http://localhost:5000/defaultdata')
+      url.search = params
+        fetch(url, {
+          method: 'get'
+        })
         .then(function(response) {
           return response.json();
         })
         .then(function(myJson) {
-          a = JSON.stringify(myJson)
-          
-          printvals()
+          drawVisualization(myJson)    
         });
       }
 
-      function printvals() {
-        console.log(a)
-      }
-    </script>
+    initializeVisualization()
+    
+  </script>
 
 </body>
-
-
 
 </html>

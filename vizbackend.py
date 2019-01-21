@@ -1,7 +1,6 @@
 from flask import Flask
 from flask import render_template
 from flask import request
-
 from flask import jsonify
 
 import pandas as pd
@@ -14,12 +13,13 @@ def all_locations_median(day, start_hour, end_hour):
     locations = pd.read_csv("locations.csv")
     pickup_times =pd.read_csv("pickup_times.csv")
 
+    #Format
+    #2019-01-13T19:00Z
+    #2019-01-13T20:00Z
+
     start = "" + day + "T" + start_hour + "Z"
     end = "" + day + "T" + end_hour + "Z"
 
-    #2019-01-13T19:00:00Z
-    #2019-01-13T20:00:00Z
-    print(start)
     pickup_times_slice = pickup_times[(pickup_times['iso_8601_timestamp'] > start) 
     & (pickup_times['iso_8601_timestamp'] <= end)]
 
@@ -35,19 +35,9 @@ def all_locations_median(day, start_hour, end_hour):
 
     return joined.to_json(orient='columns')
 
-
-
-
 @app.route('/')
-def hello_world():
+def location_page():
     return render_template('locationviz.html')
-
-
-@app.route('/defaultdata')
-def initialize_visualization():
-    
-    return all_locations_median("2019-01-07", "00:00","24:00")
-
 
 
 @app.route('/visualizationdata', methods=['GET'])
@@ -62,22 +52,11 @@ def update_visualization():
 
 
     if day != None and start_time != None and end_time != None:
+        print("HERE")
         return all_locations_median(day, start_time,end_time)
     
     else:
         return all_locations_median("2019-01-07", "15:00","16:00")
-
-    #print(day)
-    #print(start_time)
-    #print(end_time)
-
-    #dictionary = {"a": "b", "c" : "d"}
-    #return jsonify(**dictionary)
-
-
-
-
-
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
