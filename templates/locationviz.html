@@ -13,7 +13,7 @@
 
   <div id="restaurant-map" style="width:1000px;height:500px;"></div>
 
-  <form action="/visualizationdata" id="data-update-form" method="get" onsubmit="return updateVisualization(event)">
+  <form  id="data-update-form" onsubmit="return updateVisualization(event)">
     <div>
       <label for="Date">Date:</label>
       <input type="date" id="day-selected" name="day-selected"
@@ -29,7 +29,7 @@
         <input id="end-time" type="time" name="end-time" value="16:00">
     </div>
     <div class="button" id="data-update-button">
-        <button type="submit" id="form-submit">Send your message</button>
+        <button type="submit" id="form-submit">Update time range</button>
       </div>
   </form>
 
@@ -112,8 +112,8 @@
 
       var url = new URL('http://localhost:5000/visualizationdata')
       const params = new URLSearchParams(new FormData(document.getElementById("data-update-form")));
-
       url.search = params
+      console.log(url)
         fetch(url, {
           method: 'get'
         })
