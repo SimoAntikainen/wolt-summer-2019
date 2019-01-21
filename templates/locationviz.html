@@ -7,6 +7,7 @@
   <meta name="author" content="SitePoint">
 
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
 
 
@@ -18,19 +19,25 @@
 
   <button type="button" onclick="updateVisualization()">Try it</button>
 
-  <form action="/my-handling-form-page" method="post">
+  <form action="/visualizationdata" id="data-update-form" method="get">
     <div>
       <label for="Date">Date:</label>
-      <input type="date" id="start" name="trip-start"
+      <input type="date" id="day-selected" name="day-selected"
         value="2019-01-07"
         min="2019-01-07" max="2019-01-13">
     </div>
     <div>
-      <label for="mail">E-mail:</label>
-      <input type="email" id="mail" name="user_mail">
+        <label for="start-time">Start time:</label>
+        <input id="start-time" type="time" name="start-time" value="15:00">
     </div>
+    <div>
+        <label for="end-time">End time:</label>
+        <input id="end-time" type="time" name="end-time" value="16:00">
+    </div>
+    <div class="button" id="data-update-button">
+        <button type="submit" id="form-submit">Send your message</button>
+      </div>
   </form>
-
 
   <script>
 
@@ -47,17 +54,8 @@
       return formattedLocation
     }
 
-    var initial_data = {}
-    function initializeVisualization() {
-      fetch('http://localhost:5000/defaultdata')
-        .then(function(response) {
-          return response.json();
-        })
-        .then(function(plotJson) {
-          //print( JSON.stringify(myJson))
-          //print("adsds")
-          
-          TESTER = document.getElementById('restaurant-map');
+    function drawVisualization(plotJson) {
+      TESTER = document.getElementById('restaurant-map');
 
           var trace1 = {
             x: Object.values(plotJson.longitude),
@@ -103,10 +101,40 @@
           };
 
           Plotly.newPlot('restaurant-map', data, layout);
+    }
+
+
+    var initial_data = {}
+    function initializeVisualization() {
+      fetch('http://localhost:5000/visualizationdata')
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(plotJson) {
+          drawVisualization(plotJson)
+          console.log( JSON.stringify(plotJson))
+          //print("adsds")
         })
     }
 
     initializeVisualization()
+
+    $("#data-update-form").submit(function(e) {
+      e.preventDefault()
+
+      var form = $(this);  
+      $.ajax({
+           type: "GET",
+           url: form.attr('action'),
+           data: form.serialize(), // serializes the form's elements.
+           success: function(data)
+           {
+             //drawVisualization(data.json())
+               console.log(JSON.stringify(data)); // show response from the php script.
+           }
+         });
+
+  });
     
   </script>
 
@@ -119,7 +147,7 @@
           return response.json();
         })
         .then(function(myJson) {
-          a = JSON.stringify(Object.values(myJson.location_id))
+          a = JSON.stringify(myJson)
           
           printvals()
         });

@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import render_template
+from flask import request
 
 from flask import jsonify
 
@@ -9,12 +10,18 @@ import numpy as np
 app = Flask(__name__)
 
 
-def all_locations_median():
+def all_locations_median(day, start_hour, end_hour):
     locations = pd.read_csv("locations.csv")
     pickup_times =pd.read_csv("pickup_times.csv")
 
-    pickup_times_slice = pickup_times[(pickup_times['iso_8601_timestamp'] > '2019-01-13T19:00:00Z') 
-    & (pickup_times['iso_8601_timestamp'] <= '2019-01-13T20:00:00Z')]
+    start = "" + day + "T" + start_hour + "Z"
+    end = "" + day + "T" + end_hour + "Z"
+
+    #2019-01-13T19:00:00Z
+    #2019-01-13T20:00:00Z
+    print(start)
+    pickup_times_slice = pickup_times[(pickup_times['iso_8601_timestamp'] > start) 
+    & (pickup_times['iso_8601_timestamp'] <= end)]
 
     pickup_times_by_location = pickup_times_slice.groupby('location_id')
     location_medians = pickup_times_by_location['pickup_time'].median()
@@ -28,6 +35,9 @@ def all_locations_median():
 
     return joined.to_json(orient='columns')
 
+
+
+
 @app.route('/')
 def hello_world():
     return render_template('locationviz.html')
@@ -36,14 +46,35 @@ def hello_world():
 @app.route('/defaultdata')
 def initialize_visualization():
     
-    return all_locations_median()
+    return all_locations_median("2019-01-07", "00:00","24:00")
 
 
 
-@app.route('/updateddata')
+@app.route('/visualizationdata', methods=['GET'])
 def update_visualization():
-    dictionary = {"a": "b", "c" : "d"}
-    return jsonify(**dictionary)
+    day = request.args.get('day-selected')
+    start_time = request.args.get('start-time')
+    end_time = request.args.get('end-time')
+
+    print(day)
+    print(start_time)
+    print(end_time)
+
+
+    if day != None and start_time != None and end_time != None:
+        return all_locations_median(day, start_time,end_time)
+    
+    else:
+        return all_locations_median("2019-01-07", "15:00","16:00")
+
+    #print(day)
+    #print(start_time)
+    #print(end_time)
+
+    #dictionary = {"a": "b", "c" : "d"}
+    #return jsonify(**dictionary)
+
+
 
 
 
