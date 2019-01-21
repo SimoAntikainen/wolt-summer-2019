@@ -44,12 +44,10 @@
         var markerText = "id: " + locations[i] + " Md: " + medians[i] + ""
         formattedLocation.push(markerText)
       }
-
       return formattedLocation
     }
 
     function drawVisualization(plotJson) {
-      TESTER = document.getElementById('restaurant-map');
 
           var trace1 = {
             x: Object.values(plotJson.longitude),
@@ -62,7 +60,7 @@
               size: 10,
               color: Object.values(plotJson.median),
               colorbar: {
-                title: "Median",
+                title: "Median (Min)",
                 dtick: 2
               }
             }
@@ -97,8 +95,6 @@
           Plotly.newPlot('restaurant-map', data, layout);
     }
 
-
-    var initial_data = {}
     function initializeVisualization() {
       fetch('http://localhost:5000/visualizationdata')
         .then(function(response) {

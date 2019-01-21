@@ -29,7 +29,8 @@ def all_locations_median(day, start_hour, end_hour):
     location_indexes = location_medians.index.values
     location_medians = location_medians
 
-    location_medians_with_index = pd.DataFrame(data={'location_id': location_indexes, 'median': location_medians}, columns=['location_id', 'median'])
+    location_medians_with_index = pd.DataFrame(data={'location_id': location_indexes, 'median': location_medians},
+     columns=['location_id', 'median'])
     
     joined = location_medians_with_index.merge(locations, left_on='location_id', right_on='location_id', how='outer')
 
@@ -46,13 +47,7 @@ def update_visualization():
     start_time = request.args.get('start-time')
     end_time = request.args.get('end-time')
 
-    print(day)
-    print(start_time)
-    print(end_time)
-
-
     if day != None and start_time != None and end_time != None:
-        print("HERE")
         return all_locations_median(day, start_time,end_time)
     
     else:
