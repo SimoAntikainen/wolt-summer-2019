@@ -1,35 +1,35 @@
-<html lang="en">
+<html lang='en'>
 <head>
-  <meta charset="utf-8">
+  <meta charset='utf-8'>
 
   <title>Helsinki restaurant median pickup times</title>
-  <meta name="author" content="Simo Antikainen">
+  <meta name='author' content='Simo Antikainen'>
 
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 
 </head>
 
 <body>
 
-  <div id="restaurant-map" style="width:1000px;height:500px;"></div>
+  <div id='restaurant-map' style='width:1000px;height:500px;'></div>
 
-  <form  id="data-update-form" onsubmit="return updateVisualization(event)">
+  <form  id='data-update-form' onsubmit='return updateVisualization(event)'>
     <div>
-      <label for="Date">Date:</label>
-      <input type="date" id="day-selected" name="day-selected"
-        value="2019-01-07"
-        min="2019-01-07" max="2019-01-13">
+      <label for='Date'>Date:</label>
+      <input type='date' id='day-selected' name='day-selected'
+        value='2019-01-07'
+        min='2019-01-07' max='2019-01-13'>
     </div>
     <div>
-        <label for="start-time">Start time:</label>
-        <input id="start-time" type="time" name="start-time" value="15:00">
+        <label for='start-time'>Start time:</label>
+        <input id='start-time' type='time' name='start-time' value='15:00'>
     </div>
     <div>
-        <label for="end-time">End time:</label>
-        <input id="end-time" type="time" name="end-time" value="16:00">
+        <label for='end-time'>End time:</label>
+        <input id='end-time' type='time' name='end-time' value='16:00'>
     </div>
-    <div class="button" id="data-update-button">
-        <button type="submit" id="form-submit">Update time range</button>
+    <div class='button' id='data-update-button'>
+        <button type='submit' id='form-submit'>Update time range</button>
       </div>
   </form>
 
@@ -41,7 +41,7 @@
       medians = Object.values(plotJson.median)
 
       for (var i = 0; i < locations.length; i++) {
-        var markerText = "id: " + locations[i] + " Md: " + medians[i] + ""
+        var markerText = 'id: ' + locations[i] + ' Md: ' + medians[i] + ''
         formattedLocation.push(markerText)
       }
       return formattedLocation
@@ -60,9 +60,10 @@
               size: 10,
               color: Object.values(plotJson.median),
               colorbar: {
-                title: "Median (Min)",
+                title: 'Median (Min)',
                 dtick: 2
-              }
+              },
+              colorscale :'RdBu'
             }
           };
 
@@ -111,9 +112,9 @@
       //https://stackoverflow.com/questions/46640024/how-do-i-post-form-data-with-fetch-api
 
       var url = new URL('http://localhost:5000/visualizationdata')
-      const params = new URLSearchParams(new FormData(document.getElementById("data-update-form")));
+      const params = new URLSearchParams(new FormData(document.getElementById('data-update-form')));
       url.search = params
-      console.log(url)
+
         fetch(url, {
           method: 'get'
         })

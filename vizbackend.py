@@ -9,16 +9,16 @@ import numpy as np
 app = Flask(__name__)
 
 
-def all_locations_median(day, start_hour, end_hour):
-    locations = pd.read_csv("locations.csv")
-    pickup_times =pd.read_csv("pickup_times.csv")
+def locations_median(day, start_hour, end_hour):
+    locations = pd.read_csv('locations.csv')
+    pickup_times =pd.read_csv('pickup_times.csv')
 
     #Format
     #2019-01-13T19:00Z
     #2019-01-13T20:00Z
 
-    start = "" + day + "T" + start_hour + "Z"
-    end = "" + day + "T" + end_hour + "Z"
+    start = '' + day + 'T' + start_hour + 'Z'
+    end = '' + day + 'T' + end_hour + 'Z'
 
     pickup_times_slice = pickup_times[(pickup_times['iso_8601_timestamp'] > start) 
     & (pickup_times['iso_8601_timestamp'] <= end)]
@@ -48,10 +48,10 @@ def update_visualization():
     end_time = request.args.get('end-time')
 
     if day != None and start_time != None and end_time != None:
-        return all_locations_median(day, start_time,end_time)
+        return locations_median(day, start_time,end_time)
     
     else:
-        return all_locations_median("2019-01-07", "15:00","16:00")
+        return locations_median('2019-01-07', '15:00','16:00')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
