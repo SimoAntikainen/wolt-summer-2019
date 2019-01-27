@@ -35,13 +35,17 @@
 
   <script>
 
+      Plotly.setPlotConfig({
+        mapboxAccessToken: 'pk.eyJ1IjoiYW50aWthc3N0dWRlbnQiLCJhIjoiY2pyZXZmbGp5MDczaDN5bGNmZHg5bDVnbSJ9.fFX_URUh20VXDmCwUhRSpw'
+        })
+
     function formatLocationText(plotJson) {
-      var formattedLocation = []
+      let formattedLocation = []
       locations = Object.values(plotJson.location_id)
       medians = Object.values(plotJson.median)
 
-      for (var i = 0; i < locations.length; i++) {
-        var markerText = 'id: ' + locations[i] + ' Md: ' + medians[i] + ''
+      for (let i = 0; i < locations.length; i++) {
+        let markerText = 'id: ' + locations[i] + ' Md: ' + medians[i] + ''
         formattedLocation.push(markerText)
       }
       return formattedLocation
@@ -49,11 +53,11 @@
 
     function drawVisualization(plotJson) {
 
-          var trace1 = {
-            x: Object.values(plotJson.longitude),
-            y: Object.values(plotJson.latitude),
+      let trace = {
+            type:'scattermapbox',
+            lon: Object.values(plotJson.longitude),
+            lat: Object.values(plotJson.latitude),
             mode: 'markers',
-            type: 'scatter',
             text: formatLocationText(plotJson),
             textposition: 'top center',
             marker: {
@@ -67,30 +71,20 @@
             }
           };
 
-          var data = [trace1];
+          let data = [trace];
 
-          var layout = {
-            title: 'Helsinki restaurant median pickup times',
-            xaxis: {
-            title: {
-              text: 'Longitude',
-              font: {
-              family: 'Courier New, monospace',
-              size: 18,
-              color: '#7f7f7f'
-              }
-            },
-            },
-            yaxis: {
-              title: {
-                text: 'Latitude',
-              font: {
-              family: 'Courier New, monospace',
-              size: 18,
-              color: '#7f7f7f'
-                }
-              }
-            }
+          let layout = {
+            mapbox: {
+              bearing:0,
+              center: {
+              lat:60.17,
+              lon:24.94
+              },
+              pitch:0,
+              zoom:10
+              },
+            title: 'Helsinki restaurant median pickup times'
+
           };
 
           Plotly.newPlot('restaurant-map', data, layout);
@@ -108,10 +102,8 @@
 
     function updateVisualization(event) {
       event.preventDefault()
-      //https://stackoverflow.com/questions/35038857/setting-query-string-using-fetch-get-request
-      //https://stackoverflow.com/questions/46640024/how-do-i-post-form-data-with-fetch-api
 
-      var url = new URL('http://localhost:5000/visualizationdata')
+      let url = new URL('http://localhost:5000/visualizationdata')
       const params = new URLSearchParams(new FormData(document.getElementById('data-update-form')));
       url.search = params
 
@@ -121,8 +113,9 @@
         .then(function(response) {
           return response.json();
         })
-        .then(function(myJson) {
-          drawVisualization(myJson)    
+        .then(function(plotJson) {
+          //Redraws the plot instead of updating data with plotly.reshape
+          drawVisualization(plotJson)  
         });
       }
 
