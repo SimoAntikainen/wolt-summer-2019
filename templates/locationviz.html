@@ -114,7 +114,7 @@
           return response.json();
         })
         .then(function(plotJson) {
-          //Redraws the plot instead of updating data with plotly.reshape
+          //Refactor this: had problems with updating plot with plotly.reshape, so the plot is redrawn complety
           drawVisualization(plotJson)  
         });
       }

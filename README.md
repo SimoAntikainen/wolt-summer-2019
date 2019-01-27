@@ -23,14 +23,14 @@ Two ways to run the project.
 1. Jupyter notebook, which calculates the medians, produces interative visualizations of them and exports the medians
 to csv file. 
 
-![Screenshot](helsinki_medians_jupyter.png)
+![Screenshot](pics/helsinki_medians_jupyter.png)
 
 
 2. Alternatively the vizualization can be accessed though
 an small web page containing the interactive visualization, that allows
-the modification of the selected timeframe. (This is horribly overkill, but I really wanted to learn flask)
+the modification of the selected timeframe. (This is horribly overkill, but I can recycle the template to other projects)
 
-
+![Screenshot](pics/helsinki_median_html.png)
 ### Jupyter notebook
 Navigate to cd /wolt-summer-2019 and run
 ```
@@ -39,9 +39,23 @@ jupyter notebook
 Access the contents of the notebook at locationviz.ipynb
 ### Flask-app
 Navigate to cd /wolt-summer-2019 and run
+
 ```
-python vizbackend.py
+on linux:
+export FLASK_APP=vizbackend.py
+flask run
 ```
+```
+on windows:
+set FLASK_APP=vizbackend.py
+flask run
+```
+```
+on windows (powershell):
+$env:FLASK_APP = "hello.py"
+flask run
+```
+
 Access the website at http://localhost:5000 
 
 
