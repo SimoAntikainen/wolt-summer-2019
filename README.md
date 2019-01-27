@@ -30,7 +30,7 @@ to csv file.
 an small web page containing the interactive visualization, that allows
 the modification of the selected timeframe. (This is horribly overkill, but I can recycle the template to other projects)
 
-![Screenshot](pics/hweb.png)
+![Screenshot](pics/hweb.PNG)
 ### Jupyter notebook
 Navigate to cd /wolt-summer-2019 and run
 ```
