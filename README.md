@@ -28,7 +28,7 @@ to csv file.
 
 2. Alternatively the vizualization can be accessed though
 an small web page containing the interactive visualization, that allows
-the modification of the selected timeframe. (This is horribly overkill, but I can recycle the template to other projects)
+the modification of the selected timeframe. 
 
 ![Screenshot](pics/hweb.PNG)
 ### Jupyter notebook
