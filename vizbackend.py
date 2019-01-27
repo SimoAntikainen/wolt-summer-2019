@@ -31,6 +31,9 @@ def locations_median(day, start_hour, end_hour):
 
     location_medians_with_index = pd.DataFrame(data={'location_id': location_indexes, 'median': location_medians},
      columns=['location_id', 'median'])
+
+    #Ambiquity error fix for pandas 0.24 released Jan 25
+    location_medians_with_index.index.name = 'index'
     
     joined = location_medians_with_index.merge(locations, left_on='location_id', right_on='location_id', how='outer')
 
