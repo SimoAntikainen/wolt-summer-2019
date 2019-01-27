@@ -10,8 +10,8 @@ app = Flask(__name__)
 
 
 def locations_median(day, start_hour, end_hour):
-    locations = pd.read_csv('locations.csv')
-    pickup_times =pd.read_csv('pickup_times.csv')
+    locations = pd.read_csv('city/helsinki/locations.csv')
+    pickup_times =pd.read_csv('city/helsinki/pickup_times.csv')
 
     #Format
     #2019-01-13T19:00Z
