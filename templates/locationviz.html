@@ -1,4 +1,5 @@
 <html lang='en'>
+
 <head>
   <meta charset='utf-8'>
 
@@ -13,31 +14,29 @@
 
   <div id='restaurant-map' style='width:1000px;height:500px;'></div>
 
-  <form  id='data-update-form' onsubmit='return updateVisualization(event)'>
+  <form id='data-update-form' onsubmit='return updateVisualization(event)'>
     <div>
       <label for='Date'>Date:</label>
-      <input type='date' id='day-selected' name='day-selected'
-        value='2019-01-07'
-        min='2019-01-07' max='2019-01-13'>
+      <input type='date' id='day-selected' name='day-selected' value='2019-01-07' min='2019-01-07' max='2019-01-13'>
     </div>
     <div>
-        <label for='start-time'>Start time:</label>
-        <input id='start-time' type='time' name='start-time' value='15:00'>
+      <label for='start-time'>Start time:</label>
+      <input id='start-time' type='time' name='start-time' value='15:00'>
     </div>
     <div>
-        <label for='end-time'>End time:</label>
-        <input id='end-time' type='time' name='end-time' value='16:00'>
+      <label for='end-time'>End time:</label>
+      <input id='end-time' type='time' name='end-time' value='16:00'>
     </div>
     <div class='button' id='data-update-button'>
-        <button type='submit' id='form-submit'>Update time range</button>
-      </div>
+      <button type='submit' id='form-submit'>Update time range</button>
+    </div>
   </form>
 
   <script>
 
-      Plotly.setPlotConfig({
-        mapboxAccessToken: 'pk.eyJ1IjoiYW50aWthc3N0dWRlbnQiLCJhIjoiY2pyZXZmbGp5MDczaDN5bGNmZHg5bDVnbSJ9.fFX_URUh20VXDmCwUhRSpw'
-        })
+    Plotly.setPlotConfig({
+      mapboxAccessToken: 'pk.eyJ1IjoiYW50aWthc3N0dWRlbnQiLCJhIjoiY2pyZXZmbGp5MDczaDN5bGNmZHg5bDVnbSJ9.fFX_URUh20VXDmCwUhRSpw'
+    })
 
     function formatLocationText(plotJson) {
       let formattedLocation = []
@@ -54,48 +53,48 @@
     function drawVisualization(plotJson) {
 
       let trace = {
-            type:'scattermapbox',
-            lon: Object.values(plotJson.longitude),
-            lat: Object.values(plotJson.latitude),
-            mode: 'markers',
-            text: formatLocationText(plotJson),
-            textposition: 'top center',
-            marker: {
-              size: 10,
-              color: Object.values(plotJson.median),
-              colorbar: {
-                title: 'Median (Min)',
-                dtick: 2
-              },
-              colorscale :'RdBu'
-            }
-          };
+        type: 'scattermapbox',
+        lon: Object.values(plotJson.longitude),
+        lat: Object.values(plotJson.latitude),
+        mode: 'markers',
+        text: formatLocationText(plotJson),
+        textposition: 'top center',
+        marker: {
+          size: 10,
+          color: Object.values(plotJson.median),
+          colorbar: {
+            title: 'Median (Min)',
+            dtick: 2
+          },
+          colorscale: 'RdBu'
+        }
+      };
 
-          let data = [trace];
+      let data = [trace];
 
-          let layout = {
-            mapbox: {
-              bearing:0,
-              center: {
-              lat:60.17,
-              lon:24.94
-              },
-              pitch:0,
-              zoom:10
-              },
-            title: 'Helsinki restaurant median pickup times'
+      let layout = {
+        mapbox: {
+          bearing: 0,
+          center: {
+            lat: 60.17,
+            lon: 24.94
+          },
+          pitch: 0,
+          zoom: 10
+        },
+        title: 'Helsinki restaurant median pickup times'
 
-          };
+      };
 
-          Plotly.newPlot('restaurant-map', data, layout);
+      Plotly.newPlot('restaurant-map', data, layout);
     }
 
     function initializeVisualization() {
       fetch('http://localhost:5000/visualizationdata')
-        .then(function(response) {
+        .then(function (response) {
           return response.json();
         })
-        .then(function(plotJson) {
+        .then(function (plotJson) {
           drawVisualization(plotJson)
         })
     }
@@ -107,20 +106,20 @@
       const params = new URLSearchParams(new FormData(document.getElementById('data-update-form')));
       url.search = params
 
-        fetch(url, {
-          method: 'get'
-        })
-        .then(function(response) {
+      fetch(url, {
+        method: 'get'
+      })
+        .then(function (response) {
           return response.json();
         })
-        .then(function(plotJson) {
+        .then(function (plotJson) {
           //Refactor this: had problems with updating plot with plotly.reshape, so the plot is redrawn complety
-          drawVisualization(plotJson)  
+          drawVisualization(plotJson)
         });
-      }
+    }
 
     initializeVisualization()
-    
+
   </script>
 
 </body>
